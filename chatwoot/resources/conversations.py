@@ -284,14 +284,16 @@ class ConversationsResource(BaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        assignee_id: int,
+        assignee_id: int | None = None,
+        team_id: int | None = None,
     ) -> Conversation:
-        """Assign conversation to an agent.
+        """Assign conversation to an agent or a team.
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            assignee_id: Agent ID to assign to
+            assignee_id: Agent ID to assign to (optional)
+            team_id: Team ID to assign to (optional, ignored if assignee_id is present)
 
         Returns:
             Updated Conversation object
@@ -303,7 +305,17 @@ class ConversationsResource(BaseResource):
             ... assignee_id=10
             ... )
         """
-        return self.update(account_id, conversation_id, assignee_id=assignee_id)
+        data: dict[str, Any] = {}
+        if assignee_id is not None:
+            data["assignee_id"] = assignee_id
+        if team_id is not None:
+            data["team_id"] = team_id
+
+        response = self._http.post(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
+            json=data,
+        )
+        return Conversation(**response)
 
     def toggle_status(
         self,
@@ -510,19 +522,31 @@ class AsyncConversationsResource(AsyncBaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        assignee_id: int,
+        assignee_id: int | None = None,
+        team_id: int | None = None,
     ) -> Conversation:
-        """Assign conversation to an agent (async).
+        """Assign conversation to an agent or a team (async).
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            assignee_id: Agent ID to assign to
+            assignee_id: Agent ID to assign to (optional)
+            team_id: Team ID to assign to (optional, ignored if assignee_id is present)
 
         Returns:
             Updated Conversation object
         """
-        return await self.update(account_id, conversation_id, assignee_id=assignee_id)
+        data: dict[str, Any] = {}
+        if assignee_id is not None:
+            data["assignee_id"] = assignee_id
+        if team_id is not None:
+            data["team_id"] = team_id
+
+        response = await self._http.post(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
+            json=data,
+        )
+        return Conversation(**response)
 
     async def toggle_status(
         self,
