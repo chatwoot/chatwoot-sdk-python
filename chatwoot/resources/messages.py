@@ -85,11 +85,14 @@ class MessagesResource(BaseResource):
         )
         return Message(**response)
 
-    def update(self, account_id: int, message_id: int, content: str) -> Message:
+    def update(
+        self, account_id: int, conversation_id: int, message_id: int, content: str
+    ) -> Message:
         """Update message content.
 
         Args:
             account_id: The account ID
+            conversation_id: The conversation ID
             message_id: The message ID
             content: New message content
 
@@ -99,28 +102,32 @@ class MessagesResource(BaseResource):
         Examples:
             >>> message = client.messages.update(
             ... account_id=1,
+            ... conversation_id=42,
             ... message_id=123,
             ... content="Updated message content"
             ... )
         """
         data = {"content": content}
         response = self._http.patch(
-            f"/api/v1/accounts/{account_id}/messages/{message_id}",
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}",
             json=data,
         )
         return Message(**response)
 
-    def delete(self, account_id: int, message_id: int) -> None:
+    def delete(self, account_id: int, conversation_id: int, message_id: int) -> None:
         """Delete a message.
 
         Args:
             account_id: The account ID
+            conversation_id: The conversation ID
             message_id: The message ID
 
         Examples:
-            >>> client.messages.delete(account_id=1, message_id=123)
+            >>> client.messages.delete(account_id=1, conversation_id=42, message_id=123)
         """
-        self._http.delete(f"/api/v1/accounts/{account_id}/messages/{message_id}")
+        self._http.delete(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}"
+        )
 
 
 class AsyncMessagesResource(AsyncBaseResource):
@@ -185,11 +192,14 @@ class AsyncMessagesResource(AsyncBaseResource):
         )
         return Message(**response)
 
-    async def update(self, account_id: int, message_id: int, content: str) -> Message:
+    async def update(
+        self, account_id: int, conversation_id: int, message_id: int, content: str
+    ) -> Message:
         """Update message content (async).
 
         Args:
             account_id: The account ID
+            conversation_id: The conversation ID
             message_id: The message ID
             content: New message content
 
@@ -198,16 +208,21 @@ class AsyncMessagesResource(AsyncBaseResource):
         """
         data = {"content": content}
         response = await self._http.patch(
-            f"/api/v1/accounts/{account_id}/messages/{message_id}",
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}",
             json=data,
         )
         return Message(**response)
 
-    async def delete(self, account_id: int, message_id: int) -> None:
+    async def delete(
+        self, account_id: int, conversation_id: int, message_id: int
+    ) -> None:
         """Delete a message (async).
 
         Args:
             account_id: The account ID
+            conversation_id: The conversation ID
             message_id: The message ID
         """
-        await self._http.delete(f"/api/v1/accounts/{account_id}/messages/{message_id}")
+        await self._http.delete(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}"
+        )
