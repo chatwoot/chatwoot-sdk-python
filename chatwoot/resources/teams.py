@@ -53,7 +53,9 @@ class TeamAgentsResource(BaseResource):
             json=data,
         )
 
-    def update(self, account_id: int, team_id: int, agent_ids: list[int]) -> list[Agent]:
+    def update(
+        self, account_id: int, team_id: int, agent_ids: list[int]
+    ) -> list[Agent]:
         """Replace all agents in the team.
 
         All existing agents will be removed and replaced with the given list.
@@ -138,7 +140,9 @@ class AsyncTeamAgentsResource(AsyncBaseResource):
             json=data,
         )
 
-    async def update(self, account_id: int, team_id: int, agent_ids: list[int]) -> list[Agent]:
+    async def update(
+        self, account_id: int, team_id: int, agent_ids: list[int]
+    ) -> list[Agent]:
         """Replace all agents in the team (async).
 
         All existing agents will be removed and replaced with the given list.

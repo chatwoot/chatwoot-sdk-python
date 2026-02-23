@@ -3,7 +3,10 @@
 import pytest
 from unittest.mock import AsyncMock
 
-from chatwoot.resources.conversations import ConversationsResource, AsyncConversationsResource
+from chatwoot.resources.conversations import (
+    ConversationsResource,
+    AsyncConversationsResource,
+)
 from chatwoot.types.conversation import Conversation
 
 
