@@ -53,6 +53,35 @@ class TeamAgentsResource(BaseResource):
             json=data,
         )
 
+    def update(self, account_id: int, team_id: int, agent_ids: list[int]) -> list[Agent]:
+        """Replace all agents in the team.
+
+        All existing agents will be removed and replaced with the given list.
+
+        Args:
+            account_id: The account ID
+            team_id: The team ID
+            agent_ids: List of agent IDs that will form the new team
+
+        Returns:
+            List of Agent objects now in the team
+
+        Examples:
+            >>> agents = client.teams.agents.update(
+            ...     account_id=1,
+            ...     team_id=5,
+            ...     agent_ids=[10, 11]
+            ... )
+        """
+        data = {"user_ids": agent_ids}
+        response = self._http.patch(
+            f"/api/v1/accounts/{account_id}/teams/{team_id}/team_members",
+            json=data,
+        )
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
+        return []
+
     def remove(self, account_id: int, team_id: int, agent_ids: list[int]) -> None:
         """Remove agents from the team.
 
@@ -108,6 +137,28 @@ class AsyncTeamAgentsResource(AsyncBaseResource):
             f"/api/v1/accounts/{account_id}/teams/{team_id}/team_members",
             json=data,
         )
+
+    async def update(self, account_id: int, team_id: int, agent_ids: list[int]) -> list[Agent]:
+        """Replace all agents in the team (async).
+
+        All existing agents will be removed and replaced with the given list.
+
+        Args:
+            account_id: The account ID
+            team_id: The team ID
+            agent_ids: List of agent IDs that will form the new team
+
+        Returns:
+            List of Agent objects now in the team
+        """
+        data = {"user_ids": agent_ids}
+        response = await self._http.patch(
+            f"/api/v1/accounts/{account_id}/teams/{team_id}/team_members",
+            json=data,
+        )
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
+        return []
 
     async def remove(self, account_id: int, team_id: int, agent_ids: list[int]) -> None:
         """Remove agents from the team (async).
