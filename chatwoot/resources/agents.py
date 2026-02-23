@@ -34,27 +34,6 @@ class AgentsResource(BaseResource):
             return [Agent(**item) for item in response]
         return []
 
-    def get(self, account_id: int, agent_id: int) -> Agent:
-        """Get agent details.
-
-        Args:
-            account_id: The account ID
-            agent_id: The agent ID
-
-        Returns:
-            Agent object
-
-        Raises:
-            ChatwootNotFoundError: If agent not found
-            ChatwootAuthError: If authentication fails
-
-        Examples:
-            >>> agent = client.agents.get(account_id=1, agent_id=10)
-            >>> print(agent.email)
-        """
-        response = self._http.get(f"/api/v1/accounts/{account_id}/agents/{agent_id}")
-        return Agent(**response)
-
     def add(
         self,
         account_id: int,
@@ -158,21 +137,6 @@ class AsyncAgentsResource(AsyncBaseResource):
         if isinstance(response, list):
             return [Agent(**item) for item in response]
         return []
-
-    async def get(self, account_id: int, agent_id: int) -> Agent:
-        """Get agent details (async).
-
-        Args:
-            account_id: The account ID
-            agent_id: The agent ID
-
-        Returns:
-            Agent object
-        """
-        response = await self._http.get(
-            f"/api/v1/accounts/{account_id}/agents/{agent_id}"
-        )
-        return Agent(**response)
 
     async def add(
         self,
