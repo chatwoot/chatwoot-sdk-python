@@ -86,15 +86,21 @@ class MessagesResource(BaseResource):
         return Message(**response)
 
     def update(
-        self, account_id: int, conversation_id: int, message_id: int, content: str
+        self,
+        account_id: int,
+        conversation_id: int,
+        message_id: int,
+        status: str,
+        external_error: str | None = None,
     ) -> Message:
-        """Update message content.
+        """Update message status (API inbox messages only).
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
             message_id: The message ID
-            content: New message content
+            status: New message status
+            external_error: External error message (optional)
 
         Returns:
             Updated Message object
@@ -104,10 +110,12 @@ class MessagesResource(BaseResource):
             ... account_id=1,
             ... conversation_id=42,
             ... message_id=123,
-            ... content="Updated message content"
+            ... status="delivered"
             ... )
         """
-        data = {"content": content}
+        data: dict[str, Any] = {"status": status}
+        if external_error is not None:
+            data["external_error"] = external_error
         response = self._http.patch(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}",
             json=data,
@@ -193,20 +201,28 @@ class AsyncMessagesResource(AsyncBaseResource):
         return Message(**response)
 
     async def update(
-        self, account_id: int, conversation_id: int, message_id: int, content: str
+        self,
+        account_id: int,
+        conversation_id: int,
+        message_id: int,
+        status: str,
+        external_error: str | None = None,
     ) -> Message:
-        """Update message content (async).
+        """Update message status (API inbox messages only, async).
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
             message_id: The message ID
-            content: New message content
+            status: New message status
+            external_error: External error message (optional)
 
         Returns:
             Updated Message object
         """
-        data = {"content": content}
+        data: dict[str, Any] = {"status": status}
+        if external_error is not None:
+            data["external_error"] = external_error
         response = await self._http.patch(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/messages/{message_id}",
             json=data,
