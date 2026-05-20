@@ -17,6 +17,14 @@ pip install chatwoot-sdk
 uv add chatwoot-sdk
 ```
 
+Install directly from git (latest `main` or a specific branch/tag/SHA):
+
+```bash
+uv add "git+https://github.com/devmonks-co/chatwoot-sdk-python.git"
+# or pin to a branch / tag / commit
+uv add "git+https://github.com/devmonks-co/chatwoot-sdk-python.git@main"
+```
+
 > **Note:** The PyPI package name is `chatwoot-sdk`. The GitHub repository is named `chatwoot-sdk-python`.
 
 ## Quick Start
