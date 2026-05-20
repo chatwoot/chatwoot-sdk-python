@@ -7,6 +7,7 @@ from typing import Any
 from chatwoot.resources._base import AsyncBaseResource, BaseResource
 from chatwoot.types.contact import Contact, ContactCreateResponse
 from chatwoot.types.conversation import Conversation
+from chatwoot.types.note import Note
 
 
 class ContactLabelsResource(BaseResource):
@@ -107,13 +108,224 @@ class AsyncContactLabelsResource(AsyncBaseResource):
         return response if isinstance(response, list) else []
 
 
+class ContactNotesResource(BaseResource):
+    """Nested resource for managing contact notes."""
+
+    def list(self, account_id: int, contact_id: int) -> list[Note]:
+        """List notes on a contact.
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+
+        Returns:
+            List of Note objects
+
+        Examples:
+             >>> notes = client.contacts.notes.list(account_id=1, contact_id=100)
+             ... for note in notes:
+             ...     print(note.id, note.content)
+        """
+        response = self._http.get(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes"
+        )
+        if isinstance(response, list):
+            return [Note(**item) for item in response]
+        if isinstance(response, dict) and "payload" in response:
+            return [Note(**item) for item in response["payload"]]
+        return []
+
+    def get(self, account_id: int, contact_id: int, note_id: int) -> Note:
+        """Get a single note on a contact.
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+
+        Returns:
+            Note object
+
+        Examples:
+             >>> note = client.contacts.notes.get(
+             ...     account_id=1, contact_id=100, note_id=7
+             ... )
+        """
+        response = self._http.get(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}"
+        )
+        return Note(**response)
+
+    def create(self, account_id: int, contact_id: int, content: str) -> Note:
+        """Create a note on a contact.
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            content: Note content
+
+        Returns:
+            Created Note object
+
+        Examples:
+             >>> note = client.contacts.notes.create(
+             ...     account_id=1,
+             ...     contact_id=100,
+             ...     content="Followed up via email"
+             ... )
+        """
+        data = {"note": {"content": content}}
+        response = self._http.post(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes",
+            json=data,
+        )
+        return Note(**response)
+
+    def update(
+        self, account_id: int, contact_id: int, note_id: int, content: str
+    ) -> Note:
+        """Update a note on a contact.
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+            content: Updated note content
+
+        Returns:
+            Updated Note object
+
+        Examples:
+             >>> note = client.contacts.notes.update(
+             ...     account_id=1,
+             ...     contact_id=100,
+             ...     note_id=7,
+             ...     content="Updated note text"
+             ... )
+        """
+        data = {"note": {"content": content}}
+        response = self._http.patch(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}",
+            json=data,
+        )
+        return Note(**response)
+
+    def delete(self, account_id: int, contact_id: int, note_id: int) -> None:
+        """Delete a note on a contact.
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+
+        Examples:
+             >>> client.contacts.notes.delete(
+             ...     account_id=1, contact_id=100, note_id=7
+             ... )
+        """
+        self._http.delete(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}"
+        )
+
+
+class AsyncContactNotesResource(AsyncBaseResource):
+    """Async nested resource for managing contact notes."""
+
+    async def list(self, account_id: int, contact_id: int) -> list[Note]:
+        """List notes on a contact (async).
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+
+        Returns:
+            List of Note objects
+        """
+        response = await self._http.get(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes"
+        )
+        if isinstance(response, list):
+            return [Note(**item) for item in response]
+        if isinstance(response, dict) and "payload" in response:
+            return [Note(**item) for item in response["payload"]]
+        return []
+
+    async def get(self, account_id: int, contact_id: int, note_id: int) -> Note:
+        """Get a single note on a contact (async).
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+
+        Returns:
+            Note object
+        """
+        response = await self._http.get(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}"
+        )
+        return Note(**response)
+
+    async def create(self, account_id: int, contact_id: int, content: str) -> Note:
+        """Create a note on a contact (async).
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            content: Note content
+
+        Returns:
+            Created Note object
+        """
+        data = {"note": {"content": content}}
+        response = await self._http.post(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes",
+            json=data,
+        )
+        return Note(**response)
+
+    async def update(
+        self, account_id: int, contact_id: int, note_id: int, content: str
+    ) -> Note:
+        """Update a note on a contact (async).
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+            content: Updated note content
+
+        Returns:
+            Updated Note object
+        """
+        data = {"note": {"content": content}}
+        response = await self._http.patch(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}",
+            json=data,
+        )
+        return Note(**response)
+
+    async def delete(self, account_id: int, contact_id: int, note_id: int) -> None:
+        """Delete a note on a contact (async).
+
+        Args:
+            account_id: The account ID
+            contact_id: The contact ID
+            note_id: The note ID
+        """
+        await self._http.delete(
+            f"/api/v1/accounts/{account_id}/contacts/{contact_id}/notes/{note_id}"
+        )
+
+
 class ContactsResource(BaseResource):
     """Synchronous contacts resource."""
 
     def __init__(self, http):
-        """Initialize contacts resource with nested labels resource."""
+        """Initialize contacts resource with nested labels and notes resources."""
         super().__init__(http)
         self.labels = ContactLabelsResource(http)
+        self.notes = ContactNotesResource(http)
 
     def list(self, account_id: int, page: int = 1) -> list[Contact]:
         """List contacts with pagination.
@@ -325,9 +537,10 @@ class AsyncContactsResource(AsyncBaseResource):
     """Asynchronous contacts resource."""
 
     def __init__(self, http):
-        """Initialize async contacts resource with nested labels resource."""
+        """Initialize async contacts resource with nested labels and notes resources."""
         super().__init__(http)
         self.labels = AsyncContactLabelsResource(http)
+        self.notes = AsyncContactNotesResource(http)
 
     async def list(self, account_id: int, page: int = 1) -> list[Contact]:
         """List contacts with pagination (async).

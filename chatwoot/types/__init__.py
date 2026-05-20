@@ -24,6 +24,7 @@ from chatwoot.types.conversation import (
 from chatwoot.types.inbox import Inbox
 from chatwoot.types.label import Label
 from chatwoot.types.message import Message, MessageAttachment, MessageSender
+from chatwoot.types.note import Note
 from chatwoot.types.profile import Profile, ProfileAccount
 from chatwoot.types.team import Team
 
@@ -60,6 +61,8 @@ __all__ = [
     "Message",
     "MessageAttachment",
     "MessageSender",
+    # Note
+    "Note",
     # Profile
     "Profile",
     "ProfileAccount",

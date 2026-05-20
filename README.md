@@ -141,6 +141,27 @@ labels = client.contacts.labels.add(
     contact_id=100,
     labels=["vip", "premium"]
 )
+
+# Add a note to contact
+note = client.contacts.notes.create(
+    account_id=1,
+    contact_id=100,
+    content="Followed up via email"
+)
+
+# List all notes on a contact
+notes = client.contacts.notes.list(account_id=1, contact_id=100)
+
+# Update a note
+note = client.contacts.notes.update(
+    account_id=1,
+    contact_id=100,
+    note_id=note.id,
+    content="Updated note text"
+)
+
+# Delete a note
+client.contacts.notes.delete(account_id=1, contact_id=100, note_id=note.id)
 ```
 
 ### Sending Messages
@@ -232,6 +253,7 @@ The SDK provides access to the following Chatwoot API resources:
 - **Teams**: Team management
 - **Agents**: Agent management
 - **Labels**: Label management (nested under conversations and contacts)
+- **Notes**: Contact notes (nested under contacts)
 
 ## Development
 
