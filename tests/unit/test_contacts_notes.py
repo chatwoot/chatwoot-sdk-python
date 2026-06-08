@@ -36,9 +36,7 @@ def test_notes_list_returns_notes(mock_http):
     resource = ContactsResource(mock_http)
     notes = resource.notes.list(account_id=1, contact_id=100)
 
-    mock_http.get.assert_called_once_with(
-        "/api/v1/accounts/1/contacts/100/notes"
-    )
+    mock_http.get.assert_called_once_with("/api/v1/accounts/1/contacts/100/notes")
     assert isinstance(notes, list)
     assert len(notes) == 2
     assert all(isinstance(n, Note) for n in notes)
@@ -75,9 +73,7 @@ def test_notes_get_returns_single_note(mock_http):
     resource = ContactsResource(mock_http)
     note = resource.notes.get(account_id=1, contact_id=100, note_id=7)
 
-    mock_http.get.assert_called_once_with(
-        "/api/v1/accounts/1/contacts/100/notes/7"
-    )
+    mock_http.get.assert_called_once_with("/api/v1/accounts/1/contacts/100/notes/7")
     assert isinstance(note, Note)
     assert note.id == 7
     assert note.content == "Followed up via email"
@@ -122,9 +118,7 @@ def test_notes_delete_calls_delete_endpoint(mock_http):
     resource = ContactsResource(mock_http)
     result = resource.notes.delete(account_id=1, contact_id=100, note_id=7)
 
-    mock_http.delete.assert_called_once_with(
-        "/api/v1/accounts/1/contacts/100/notes/7"
-    )
+    mock_http.delete.assert_called_once_with("/api/v1/accounts/1/contacts/100/notes/7")
     assert result is None
 
 
@@ -136,9 +130,7 @@ async def test_async_notes_list(mock_async_http):
     resource = AsyncContactsResource(mock_async_http)
     notes = await resource.notes.list(account_id=1, contact_id=100)
 
-    mock_async_http.get.assert_called_once_with(
-        "/api/v1/accounts/1/contacts/100/notes"
-    )
+    mock_async_http.get.assert_called_once_with("/api/v1/accounts/1/contacts/100/notes")
     assert len(notes) == 2
     assert notes[0].id == 7
 
