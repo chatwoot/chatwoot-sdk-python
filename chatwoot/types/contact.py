@@ -5,11 +5,47 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 
 
+class InboxSlim(BaseModel):
+    """
+    A data object that contains only partial information of an Inbox. This is attached to the Contact object because, when you reference
+    an Inbox through Contact, this is all the data it contains.
+
+    eg. client.contacts.search(...) -> response JSON = {
+        id: 123,
+        ...
+        contact_inboxes: [
+            {
+                source_id: "+15551234567",
+                inbox: {
+                    id: 789,
+                    avatar_url: "https://cdn.example.com/inbox-avatar.png",
+                    channel_id: 42,
+                    name: "Foo",
+                    channel_type: "Channel::Whatsapp",
+                    provider: "whatsapp_cloud"
+                }
+            }
+        ]
+    }
+    """
+
+    id: int
+    channel_id: int
+    name: str
+    channel_type: str
+    avatar_url: str | None = None
+    provider: str | None = None
+
+
 class ContactInbox(BaseModel):
     """Contact's inbox association."""
 
     source_id: str
-    inbox_id: int | None = None
+    inbox_id: int | None = Field(
+        default=None,
+        deprecated="inbox_id is deprecated; use inbox.id instead.",
+    )
+    inbox: InboxSlim
 
 
 class Contact(BaseModel):
