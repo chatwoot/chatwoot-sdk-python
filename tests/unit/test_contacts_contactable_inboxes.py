@@ -32,9 +32,19 @@ CONTACTABLE_INBOXES_PAYLOAD = [
 ]
 
 
-def test_contactable_inboxes_with_payload_wrapper(mock_http):
-    """Test contactable_inboxes returns payload list from wrapped response."""
-    mock_http.get.return_value = {"payload": CONTACTABLE_INBOXES_PAYLOAD}
+def test_contactable_inboxes_returns_empty_on_non_list(mock_http):
+    """Test contactable_inboxes returns empty list for a non-list response."""
+    mock_http.get.return_value = {}
+
+    resource = ContactsResource(mock_http)
+    result = resource.contactable_inboxes(account_id=1, contact_id=100)
+
+    assert result == []
+
+
+def test_contactable_inboxes_with_list_response(mock_http):
+    """Test contactable_inboxes handles bare list response."""
+    mock_http.get.return_value = CONTACTABLE_INBOXES_PAYLOAD
 
     resource = ContactsResource(mock_http)
     result = resource.contactable_inboxes(account_id=1, contact_id=100)
@@ -51,33 +61,10 @@ def test_contactable_inboxes_with_payload_wrapper(mock_http):
     assert result[1]["inbox"]["channel_type"] == "Channel::WebWidget"
 
 
-def test_contactable_inboxes_returns_empty_on_no_payload(mock_http):
-    """Test contactable_inboxes returns empty list when no payload."""
-    mock_http.get.return_value = {}
-
-    resource = ContactsResource(mock_http)
-    result = resource.contactable_inboxes(account_id=1, contact_id=100)
-
-    assert result == []
-
-
-def test_contactable_inboxes_with_list_response(mock_http):
-    """Test contactable_inboxes handles bare list response."""
-    mock_http.get.return_value = CONTACTABLE_INBOXES_PAYLOAD
-
-    resource = ContactsResource(mock_http)
-    result = resource.contactable_inboxes(account_id=1, contact_id=100)
-
-    assert isinstance(result, list)
-    assert len(result) == 2
-
-
 @pytest.mark.asyncio
 async def test_async_contactable_inboxes(mock_async_http):
-    """Test async contactable_inboxes returns payload list."""
-    mock_async_http.get = AsyncMock(
-        return_value={"payload": CONTACTABLE_INBOXES_PAYLOAD}
-    )
+    """Test async contactable_inboxes returns bare list response."""
+    mock_async_http.get = AsyncMock(return_value=CONTACTABLE_INBOXES_PAYLOAD)
 
     resource = AsyncContactsResource(mock_async_http)
     result = await resource.contactable_inboxes(account_id=1, contact_id=100)

@@ -28,8 +28,6 @@ class ContactLabelsResource(BaseResource):
         response = self._http.get(
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/labels"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
     def add(self, account_id: int, contact_id: int, labels: list[str]) -> list[str]:
@@ -57,8 +55,6 @@ class ContactLabelsResource(BaseResource):
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/labels",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
 
@@ -78,8 +74,6 @@ class AsyncContactLabelsResource(AsyncBaseResource):
         response = await self._http.get(
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/labels"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
     async def add(
@@ -102,8 +96,6 @@ class AsyncContactLabelsResource(AsyncBaseResource):
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/labels",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
 
@@ -316,8 +308,6 @@ class ContactsResource(BaseResource):
         response = self._http.get(
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/contactable_inboxes"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
 
@@ -488,6 +478,4 @@ class AsyncContactsResource(AsyncBaseResource):
         response = await self._http.get(
             f"/api/v1/accounts/{account_id}/contacts/{contact_id}/contactable_inboxes"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []

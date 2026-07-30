@@ -30,8 +30,8 @@ class InboxMembersResource(BaseResource):
         response = self._http.get(
             f"/api/v1/accounts/{account_id}/inbox_members/{inbox_id}"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     def add(self, account_id: int, inbox_id: int, agent_ids: list[int]) -> list[Agent]:
@@ -57,8 +57,8 @@ class InboxMembersResource(BaseResource):
             f"/api/v1/accounts/{account_id}/inbox_members",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     def update(
@@ -86,8 +86,8 @@ class InboxMembersResource(BaseResource):
             f"/api/v1/accounts/{account_id}/inbox_members",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     def remove(self, account_id: int, inbox_id: int, agent_ids: list[int]) -> None:
@@ -128,8 +128,8 @@ class AsyncInboxMembersResource(AsyncBaseResource):
         response = await self._http.get(
             f"/api/v1/accounts/{account_id}/inbox_members/{inbox_id}"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     async def add(
@@ -150,8 +150,8 @@ class AsyncInboxMembersResource(AsyncBaseResource):
             f"/api/v1/accounts/{account_id}/inbox_members",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     async def update(
@@ -172,8 +172,8 @@ class AsyncInboxMembersResource(AsyncBaseResource):
             f"/api/v1/accounts/{account_id}/inbox_members",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return [Agent(**item) for item in response["payload"]]
+        if isinstance(response, list):
+            return [Agent(**item) for item in response]
         return []
 
     async def remove(

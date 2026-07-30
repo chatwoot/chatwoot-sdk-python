@@ -27,7 +27,7 @@ AGENT_PAYLOAD = [
 
 def test_inbox_agents_update(mock_http):
     """Test replacing all agents in an inbox."""
-    mock_http.patch.return_value = {"payload": AGENT_PAYLOAD}
+    mock_http.patch.return_value = AGENT_PAYLOAD
 
     resource = InboxMembersResource(mock_http)
     agents = resource.update(account_id=1, inbox_id=5, agent_ids=[10])
@@ -55,7 +55,7 @@ def test_inbox_agents_update_empty_payload(mock_http):
 @pytest.mark.asyncio
 async def test_async_inbox_agents_update(mock_async_http):
     """Test async replacing all agents in an inbox."""
-    mock_async_http.patch = AsyncMock(return_value={"payload": AGENT_PAYLOAD})
+    mock_async_http.patch = AsyncMock(return_value=AGENT_PAYLOAD)
 
     resource = AsyncInboxMembersResource(mock_async_http)
     agents = await resource.update(account_id=1, inbox_id=5, agent_ids=[10])

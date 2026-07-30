@@ -41,7 +41,7 @@ AGENT_PAYLOAD = [
 
 def test_inbox_agents_list(mock_http):
     """Test listing agents in an inbox."""
-    mock_http.get.return_value = {"payload": AGENT_PAYLOAD}
+    mock_http.get.return_value = AGENT_PAYLOAD
 
     resource = InboxMembersResource(mock_http)
     agents = resource.list(account_id=1, inbox_id=5)
@@ -73,7 +73,7 @@ def test_inbox_agents_list_empty_payload(mock_http):
 
 def test_inbox_agents_add(mock_http):
     """Test adding agents to an inbox."""
-    mock_http.post.return_value = {"payload": AGENT_PAYLOAD}
+    mock_http.post.return_value = AGENT_PAYLOAD
 
     resource = InboxMembersResource(mock_http)
     agents = resource.add(account_id=1, inbox_id=5, agent_ids=[10, 11])
@@ -125,7 +125,7 @@ def test_async_inboxes_resource_has_agents(mock_async_http):
 @pytest.mark.asyncio
 async def test_async_inbox_agents_list(mock_async_http):
     """Test async listing agents in an inbox."""
-    mock_async_http.get = AsyncMock(return_value={"payload": AGENT_PAYLOAD})
+    mock_async_http.get = AsyncMock(return_value=AGENT_PAYLOAD)
 
     resource = AsyncInboxMembersResource(mock_async_http)
     agents = await resource.list(account_id=1, inbox_id=5)
@@ -139,7 +139,7 @@ async def test_async_inbox_agents_list(mock_async_http):
 @pytest.mark.asyncio
 async def test_async_inbox_agents_add(mock_async_http):
     """Test async adding agents to an inbox."""
-    mock_async_http.post = AsyncMock(return_value={"payload": AGENT_PAYLOAD})
+    mock_async_http.post = AsyncMock(return_value=AGENT_PAYLOAD)
 
     resource = AsyncInboxMembersResource(mock_async_http)
     agents = await resource.add(account_id=1, inbox_id=5, agent_ids=[10, 11])

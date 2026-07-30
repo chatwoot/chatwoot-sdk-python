@@ -30,8 +30,6 @@ class ConversationLabelsResource(BaseResource):
         response = self._http.get(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/labels"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
     def add(
@@ -61,8 +59,6 @@ class ConversationLabelsResource(BaseResource):
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/labels",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
 
@@ -82,8 +78,6 @@ class AsyncConversationLabelsResource(AsyncBaseResource):
         response = await self._http.get(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/labels"
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
     async def add(
@@ -106,8 +100,6 @@ class AsyncConversationLabelsResource(AsyncBaseResource):
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/labels",
             json=data,
         )
-        if isinstance(response, dict) and "payload" in response:
-            return response["payload"]
         return response if isinstance(response, list) else []
 
 
