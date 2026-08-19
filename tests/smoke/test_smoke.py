@@ -309,18 +309,19 @@ class TestConversations:
         self, client: ChatwootClient, account_id: int, state: dict
     ):
         convo = client.conversations.update(
-            account_id, state["conversation_id"], assignee_id=state["agent_id"]
+            account_id, state["conversation_id"], priority="high"
         )
         assert isinstance(convo, Conversation)
+        assert convo.priority == "high"
 
     def test_assign_conversation(
         self, client: ChatwootClient, account_id: int, state: dict
     ):
-        profile = client.conversations.assign(
+        agent = client.conversations.assign(
             account_id, state["conversation_id"], assignee_id=state["agent_id"]
         )
-        assert isinstance(profile, Profile)
-        assert profile.id == state["agent_id"]
+        assert isinstance(agent, Agent)
+        assert agent.id == state["agent_id"]
 
     def test_list_conversations(
         self, client: ChatwootClient, account_id: int, state: dict

@@ -5,9 +5,10 @@ from __future__ import annotations
 from typing import Any
 
 from chatwoot.resources._base import AsyncBaseResource, BaseResource
-from chatwoot.types.common import Unset, UNSET
-from chatwoot.types.profile import Profile
+from chatwoot.types.agent import Agent
+from chatwoot.types.common import UNSET, Unset
 from chatwoot.types.conversation import Conversation, ConversationToggleStatusResponse
+from chatwoot.types.team import Team
 
 
 class ConversationLabelsResource(BaseResource):
@@ -242,19 +243,19 @@ class ConversationsResource(BaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        status: str | None = None,
-        assignee_id: int | None = None,
-        team_id: int | None = None,
+        priority: str | None = None,
         **kwargs: Any,
     ) -> Conversation:
         """Update conversation.
 
+        This endpoint only accepts ``priority``. Use the dedicated methods for
+        the other attributes: :meth:`toggle_status` for the status and
+        :meth:`assign` for the assignee or the team.
+
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            status: New status (optional)
-            assignee_id: New assignee ID (optional)
-            team_id: New team ID (optional)
+            priority: New priority: "none", "low", "medium", "high" or "urgent"
             **kwargs: Additional conversation attributes to update
 
         Returns:
@@ -264,17 +265,12 @@ class ConversationsResource(BaseResource):
             >>> conversation = client.conversations.update(
             ... account_id=1,
             ... conversation_id=42,
-            ... status="resolved",
-            ... assignee_id=10
+            ... priority="high"
             ... )
         """
         data = {**kwargs}
-        if status is not None:
-            data["status"] = status
-        if assignee_id is not None:
-            data["assignee_id"] = assignee_id
-        if team_id is not None:
-            data["team_id"] = team_id
+        if priority is not None:
+            data["priority"] = priority
 
         response = self._http.patch(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}",
@@ -288,36 +284,54 @@ class ConversationsResource(BaseResource):
         conversation_id: int,
         assignee_id: int | Unset | None = UNSET,
         team_id: int | Unset | None = UNSET,
-    ) -> Profile:
-        """Assign conversation to an agent.
+    ) -> Agent | Team | None:
+        """Assign conversation to an agent or a team.
+
+        Exactly one of ``assignee_id`` or ``team_id`` must be supplied: the API
+        checks ``assignee_id`` first and silently ignores ``team_id`` when both
+        are present. Pass ``None`` as the value to clear that assignment.
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            assignee_id: Agent ID to assign to
-            team_id: Team ID to assign to
+            assignee_id: Agent ID to assign to, or None to unassign the agent
+            team_id: Team ID to assign to, or None to unassign the team
 
         Returns:
-            Profile object
+            The assigned Agent, the assigned Team, or None when the
+            assignment was cleared
+
+        Raises:
+            ValueError: If neither or both of assignee_id and team_id are given
 
         Examples:
-            >>> conversation = client.conversations.assign(
+            >>> agent = client.conversations.assign(
             ... account_id=1,
             ... conversation_id=42,
             ... assignee_id=1
             ... )
         """
-        data = {}
-        if assignee_id is not UNSET:
-            data["assignee_id"] = assignee_id
-        if team_id is not UNSET:
-            data["team_id"] = team_id
+        if assignee_id is not UNSET and team_id is not UNSET:
+            raise ValueError(
+                "Pass either assignee_id or team_id, not both: the API ignores "
+                "team_id whenever assignee_id is present."
+            )
+        if assignee_id is UNSET and team_id is UNSET:
+            raise ValueError("Pass either assignee_id or team_id.")
+
+        data = (
+            {"assignee_id": assignee_id}
+            if assignee_id is not UNSET
+            else {"team_id": team_id}
+        )
 
         response = self._http.post(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
             json=data,
         )
-        return Profile(**response)
+        if not isinstance(response, dict) or not response:
+            return None
+        return Team(**response) if team_id is not UNSET else Agent(**response)
 
     def toggle_status(
         self,
@@ -488,31 +502,34 @@ class AsyncConversationsResource(AsyncBaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        status: str | None = None,
-        assignee_id: int | None = None,
-        team_id: int | None = None,
+        priority: str | None = None,
         **kwargs: Any,
     ) -> Conversation:
         """Update conversation (async).
 
+        This endpoint only accepts ``priority``. Use the dedicated methods for
+        the other attributes: :meth:`toggle_status` for the status and
+        :meth:`assign` for the assignee or the team.
+
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            status: New status
-            assignee_id: New assignee ID
-            team_id: New team ID
+            priority: New priority: "none", "low", "medium", "high" or "urgent"
             **kwargs: Additional conversation attributes
 
         Returns:
             Updated Conversation object
+
+        Examples:
+            >>> conversation = await client.conversations.update(
+            ... account_id=1,
+            ... conversation_id=42,
+            ... priority="high"
+            ... )
         """
         data = {**kwargs}
-        if status is not None:
-            data["status"] = status
-        if assignee_id is not None:
-            data["assignee_id"] = assignee_id
-        if team_id is not None:
-            data["team_id"] = team_id
+        if priority is not None:
+            data["priority"] = priority
 
         response = await self._http.patch(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}",
@@ -526,36 +543,54 @@ class AsyncConversationsResource(AsyncBaseResource):
         conversation_id: int,
         assignee_id: int | Unset | None = UNSET,
         team_id: int | Unset | None = UNSET,
-    ) -> Profile:
-        """Assign conversation to an agent (async).
+    ) -> Agent | Team | None:
+        """Assign conversation to an agent or a team (async).
+
+        Exactly one of ``assignee_id`` or ``team_id`` must be supplied: the API
+        checks ``assignee_id`` first and silently ignores ``team_id`` when both
+        are present. Pass ``None`` as the value to clear that assignment.
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
-            assignee_id: Agent ID to assign to
-            team_id: Team ID to assign to
+            assignee_id: Agent ID to assign to, or None to unassign the agent
+            team_id: Team ID to assign to, or None to unassign the team
 
         Returns:
-            Profile object
+            The assigned Agent, the assigned Team, or None when the
+            assignment was cleared
+
+        Raises:
+            ValueError: If neither or both of assignee_id and team_id are given
 
         Examples:
-            >>> conversation = await client.conversations.assign(
+            >>> agent = await client.conversations.assign(
             ... account_id=1,
             ... conversation_id=42,
             ... assignee_id=1
             ... )
         """
-        data = {}
-        if assignee_id is not UNSET:
-            data["assignee_id"] = assignee_id
-        if team_id is not UNSET:
-            data["team_id"] = team_id
+        if assignee_id is not UNSET and team_id is not UNSET:
+            raise ValueError(
+                "Pass either assignee_id or team_id, not both: the API ignores "
+                "team_id whenever assignee_id is present."
+            )
+        if assignee_id is UNSET and team_id is UNSET:
+            raise ValueError("Pass either assignee_id or team_id.")
+
+        data = (
+            {"assignee_id": assignee_id}
+            if assignee_id is not UNSET
+            else {"team_id": team_id}
+        )
 
         response = await self._http.post(
             f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
             json=data,
         )
-        return Profile(**response)
+        if not isinstance(response, dict) or not response:
+            return None
+        return Team(**response) if team_id is not UNSET else Agent(**response)
 
     async def toggle_status(
         self,
