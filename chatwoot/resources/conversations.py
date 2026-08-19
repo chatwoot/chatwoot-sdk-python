@@ -288,7 +288,7 @@ class ConversationsResource(BaseResource):
         conversation_id: int,
         assignee_id: int | Unset | None = UNSET,
         team_id: int | Unset | None = UNSET,
-    ) -> Conversation:
+    ) -> Profile:
         """Assign conversation to an agent.
 
         Args:
@@ -526,8 +526,8 @@ class AsyncConversationsResource(AsyncBaseResource):
         conversation_id: int,
         assignee_id: int | Unset | None = UNSET,
         team_id: int | Unset | None = UNSET,
-    ) -> Conversation:
-        """Assign conversation to an agent.
+    ) -> Profile:
+        """Assign conversation to an agent (async).
 
         Args:
             account_id: The account ID
@@ -539,7 +539,7 @@ class AsyncConversationsResource(AsyncBaseResource):
             Profile object
 
         Examples:
-            >>> conversation = client.conversations.assign(
+            >>> conversation = await client.conversations.assign(
             ... account_id=1,
             ... conversation_id=42,
             ... assignee_id=1
