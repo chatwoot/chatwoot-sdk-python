@@ -2,6 +2,7 @@
 
 from chatwoot.types.agent import Agent
 from chatwoot.types.common import (
+    UNSET,
     AgentRole,
     AvailabilityStatus,
     ChannelType,
@@ -10,6 +11,7 @@ from chatwoot.types.common import (
     MessageContentType,
     MessageType,
     PaginationMeta,
+    Unset,
 )
 from chatwoot.types.contact import Contact, ContactCreateResponse, ContactInbox
 from chatwoot.types.conversation import (
@@ -37,7 +39,9 @@ __all__ = [
     "MessageContentType",
     "MessageType",
     # Common
+    "UNSET",
     "PaginationMeta",
+    "Unset",
     # Agent
     "Agent",
     # Contact

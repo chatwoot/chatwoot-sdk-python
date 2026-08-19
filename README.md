@@ -96,12 +96,25 @@ conversations = client.conversations.list(
 # Get conversation details
 conversation = client.conversations.get(account_id=1, conversation_id=42)
 
-# Update conversation
+# Update conversation priority
 updated = client.conversations.update(
     account_id=1,
     conversation_id=42,
-    status="resolved",
+    priority="high"
+)
+
+# Assign conversation to an agent (or pass team_id for a team)
+agent = client.conversations.assign(
+    account_id=1,
+    conversation_id=42,
     assignee_id=10
+)
+
+# Change conversation status
+status = client.conversations.toggle_status(
+    account_id=1,
+    conversation_id=42,
+    status="resolved"
 )
 
 # Add labels to conversation
