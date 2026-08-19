@@ -13,7 +13,6 @@ from chatwoot.types.team import Team
 
 ENDPOINT = "/api/v1/accounts/1/conversations/42/assignments"
 
-# Shape of app/views/api/v1/models/_agent.json.jbuilder
 AGENT_RESPONSE = {
     "id": 10,
     "account_id": 1,
@@ -29,7 +28,6 @@ AGENT_RESPONSE = {
     "thumbnail": "https://example.com/avatar.png",
 }
 
-# Shape of `render json: @team` in the assignments controller
 TEAM_RESPONSE = {
     "id": 7,
     "name": "Billing",
@@ -69,7 +67,6 @@ def test_assign_team(mock_http):
 
 def test_unassign_agent(mock_http):
     """Test that None clears the assignment and returns None."""
-    # The API answers `null` for a cleared assignment.
     mock_http.post.return_value = None
 
     resource = ConversationsResource(mock_http)

@@ -6,19 +6,13 @@ from pydantic import BaseModel
 
 
 class Unset:
-    """Sentinel type for an argument the caller did not supply.
-
-    This is distinct from ``None``. Some endpoints accept ``None`` as a real
-    value that means "clear this field", so a method cannot use ``None`` to
-    tell "not supplied" apart from "clear it".
-    """
+    """Sentinel for an argument the caller did not supply."""
 
     def __repr__(self) -> str:
         return "UNSET"
 
 
 UNSET = Unset()
-"""Singleton marking an argument that was left out."""
 
 
 class ConversationStatus(str, Enum):

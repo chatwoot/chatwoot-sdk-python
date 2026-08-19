@@ -248,9 +248,8 @@ class ConversationsResource(BaseResource):
     ) -> Conversation:
         """Update conversation.
 
-        This endpoint only accepts ``priority``. Use the dedicated methods for
-        the other attributes: :meth:`toggle_status` for the status and
-        :meth:`assign` for the assignee or the team.
+        Only priority is accepted here. Use toggle_status() for the status and
+        assign() for the assignee or the team.
 
         Args:
             account_id: The account ID
@@ -286,10 +285,6 @@ class ConversationsResource(BaseResource):
         team_id: int | Unset | None = UNSET,
     ) -> Agent | Team | None:
         """Assign conversation to an agent or a team.
-
-        Exactly one of ``assignee_id`` or ``team_id`` must be supplied: the API
-        checks ``assignee_id`` first and silently ignores ``team_id`` when both
-        are present. Pass ``None`` as the value to clear that assignment.
 
         Args:
             account_id: The account ID
@@ -507,9 +502,8 @@ class AsyncConversationsResource(AsyncBaseResource):
     ) -> Conversation:
         """Update conversation (async).
 
-        This endpoint only accepts ``priority``. Use the dedicated methods for
-        the other attributes: :meth:`toggle_status` for the status and
-        :meth:`assign` for the assignee or the team.
+        Only priority is accepted here. Use toggle_status() for the status and
+        assign() for the assignee or the team.
 
         Args:
             account_id: The account ID
@@ -545,10 +539,6 @@ class AsyncConversationsResource(AsyncBaseResource):
         team_id: int | Unset | None = UNSET,
     ) -> Agent | Team | None:
         """Assign conversation to an agent or a team (async).
-
-        Exactly one of ``assignee_id`` or ``team_id`` must be supplied: the API
-        checks ``assignee_id`` first and silently ignores ``team_id`` when both
-        are present. Pass ``None`` as the value to clear that assignment.
 
         Args:
             account_id: The account ID
