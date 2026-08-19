@@ -5,6 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 from chatwoot.resources._base import AsyncBaseResource, BaseResource
+from chatwoot.types.common import Unset, UNSET
+from chatwoot.types.profile import Profile
 from chatwoot.types.conversation import Conversation, ConversationToggleStatusResponse
 
 
@@ -284,7 +286,8 @@ class ConversationsResource(BaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        assignee_id: int,
+        assignee_id: int | Unset | None = UNSET,
+        team_id: int | Unset | None = UNSET,
     ) -> Conversation:
         """Assign conversation to an agent.
 
@@ -292,18 +295,29 @@ class ConversationsResource(BaseResource):
             account_id: The account ID
             conversation_id: The conversation ID
             assignee_id: Agent ID to assign to
+            team_id: Team ID to assign to
 
         Returns:
-            Updated Conversation object
+            Profile object
 
         Examples:
             >>> conversation = client.conversations.assign(
             ... account_id=1,
             ... conversation_id=42,
-            ... assignee_id=10
+            ... assignee_id=1
             ... )
         """
-        return self.update(account_id, conversation_id, assignee_id=assignee_id)
+        data = {}
+        if assignee_id is not UNSET:
+            data["assignee_id"] = assignee_id
+        if team_id is not UNSET:
+            data["team_id"] = team_id
+
+        response = self._http.post(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
+            json=data,
+        )
+        return Profile(**response)
 
     def toggle_status(
         self,
@@ -510,19 +524,38 @@ class AsyncConversationsResource(AsyncBaseResource):
         self,
         account_id: int,
         conversation_id: int,
-        assignee_id: int,
+        assignee_id: int | Unset | None = UNSET,
+        team_id: int | Unset | None = UNSET,
     ) -> Conversation:
-        """Assign conversation to an agent (async).
+        """Assign conversation to an agent.
 
         Args:
             account_id: The account ID
             conversation_id: The conversation ID
             assignee_id: Agent ID to assign to
+            team_id: Team ID to assign to
 
         Returns:
-            Updated Conversation object
+            Profile object
+
+        Examples:
+            >>> conversation = client.conversations.assign(
+            ... account_id=1,
+            ... conversation_id=42,
+            ... assignee_id=1
+            ... )
         """
-        return await self.update(account_id, conversation_id, assignee_id=assignee_id)
+        data = {}
+        if assignee_id is not UNSET:
+            data["assignee_id"] = assignee_id
+        if team_id is not UNSET:
+            data["team_id"] = team_id
+
+        response = await self._http.post(
+            f"/api/v1/accounts/{account_id}/conversations/{conversation_id}/assignments",
+            json=data,
+        )
+        return Profile(**response)
 
     async def toggle_status(
         self,

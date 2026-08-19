@@ -5,6 +5,13 @@ from enum import Enum
 from pydantic import BaseModel
 
 
+class Unset:
+    """Sentinel for a value not provided."""
+
+
+UNSET = Unset()
+
+
 class ConversationStatus(str, Enum):
     """Status of a conversation."""
 
